@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import Task from './Task.jsx';
 import './TaskList.css';
 
-const TaskList = ({ tasks, onClick }) => {
+const TaskList = ({ tasks, onClick, onUnregisterTask }) => {
   const getTaskListJSX = (tasks) => {
     return tasks.map((task) => {
       return (
@@ -12,6 +12,7 @@ const TaskList = ({ tasks, onClick }) => {
           title={task.title}
           isComplete={task.isComplete}
           onClickTask={onClick}
+          onUnregisterTask={onUnregisterTask}
         />
       );
     });
@@ -28,6 +29,7 @@ TaskList.propTypes = {
     })
   ).isRequired,
   onClickTask: PropTypes.func.isRequired,
+  onUnregisterTask: PropTypes.func.isRequired,
 };
 
 export default TaskList;

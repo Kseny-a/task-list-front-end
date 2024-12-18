@@ -41,7 +41,12 @@ const App = () => {
       } else {
         return task;
       }
-     }));
+    }));
+  };
+  const handleUnregisterTask = (id) => {
+    setTask(tasksData => tasksData.filter (task => {
+      return task.id !== id;
+    }));
   };
 
   return (
@@ -50,7 +55,7 @@ const App = () => {
         <h1>Ada&apos;s Task List</h1>
       </header>
       <main>
-        <div>{<TaskList tasks={tasksData} onClick={handleCompleteTask} />}</div>
+        <div>{<TaskList tasks={tasksData} onClick={handleCompleteTask} onUnregisterTask={handleUnregisterTask} />}</div>
       </main>
     </div>
   );
