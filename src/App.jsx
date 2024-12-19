@@ -1,52 +1,39 @@
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import TaskList from './components/TaskList.jsx';
 import './App.css';
+import axios from 'axios';
 
-const TASKS = [
-  {
-    id: 1,
-    title: 'Mow the lawn',
-    isComplete: false,
-  },
-  {
-    id: 2,
-    title: 'Cook Pasta',
-    isComplete: true,
-  },
-  {
-    id: 3,
-    title: 'Feed a cat',
-    isComplete: true,
-  },
-  {
-    id: 4,
-    title: 'Water plants',
-    isComplete: false,
-  },
-  {
-    id: 5,
-    title: 'Shop groceries',
-    isComplete: false,
-  },
-
-];
 
 const App = () => {
-  const [tasksData, setTask] = useState(TASKS);
+  const [tasksData, setTasks] = useState([]);
+
+  const fetchTasks = () => axios.get('http://localhost:5000/tasks')
+    .then(tasks => setTasks(tasks.data));
+
+  const markTaskComplete = taskId => axios.patch(`http://localhost:5000/tasks/${taskId}/mark_complete`)
+    .then(fetchTasks);
+
+  const markTaskIncomplete = taskId => axios.patch(`http://localhost:5000/tasks/${taskId}/mark_incomplete`)
+    .then(fetchTasks);
+
+  const unregisterTask = taskId => axios.delete(`http://localhost:5000/tasks/${taskId}`)
+    .then(fetchTasks);
+
+  useEffect( () => {
+    fetchTasks();
+  }, []);
 
   const handleCompleteTask = (id) => {
-    setTask(tasksData => tasksData.map(task => {
-      if (task.id ===id) {
-        return {...task, isComplete: !task.isComplete };
+    tasksData.filter(task => task.id === id).map( task => {
+      if (task.is_complete === true) {
+        markTaskIncomplete(id);
       } else {
-        return task;
+        markTaskComplete(id);
       }
-    }));
+    });
   };
   const handleUnregisterTask = (id) => {
-    setTask(tasksData => tasksData.filter (task => {
-      return task.id !== id;
-    }));
+    tasksData.filter(task => task.id === id).map(task => unregisterTask(task.id));
   };
 
   return (
@@ -55,7 +42,9 @@ const App = () => {
         <h1>Ada&apos;s Task List</h1>
       </header>
       <main>
-        <div>{<TaskList tasks={tasksData} onClick={handleCompleteTask} onUnregisterTask={handleUnregisterTask} />}</div>
+        <TaskList tasks={tasksData.map(task => ({id: task.id, title: task.title, isComplete: task.is_complete}))}
+          onTaskClickCallback={handleCompleteTask}
+          onTaskDeleteCallback={handleUnregisterTask}/>
       </main>
     </div>
   );

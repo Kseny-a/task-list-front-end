@@ -10,8 +10,8 @@ describe('Task', () => {
         id={1}
         title={'Test Title'}
         isComplete={true}
-        onClickCallback={() => { }}
-        onDeleteCallback={() => { }}
+        onTaskClickCallback={() => { }}
+        onTaskDeleteCallback={() => { }}
       />
     );
 
@@ -19,7 +19,7 @@ describe('Task', () => {
     expect(screen.getByText('Test Title')).toBeInTheDocument();
   });
 
-  test.skip('Runs callbacks when buttons clicked', () => {
+  test('Runs callbacks when buttons clicked', () => {
     // Arrange
     const clickCallback = vi.fn();
     const deleteCallback = vi.fn();
@@ -30,13 +30,13 @@ describe('Task', () => {
         id={42}
         title={'Test Title'}
         isComplete={true}
-        onClickCallback={clickCallback}
-        onDeleteCallback={deleteCallback}
+        onTaskClickCallback={clickCallback}
+        onTaskDeleteCallback={deleteCallback}
       />
     );
 
     screen.getByText('Test Title').click();
-    screen.getByTestId('delete button 42').click();
+    screen.getByText('x').click();
 
     // Assert
     expect(clickCallback).toHaveBeenCalledTimes(1);
@@ -53,8 +53,8 @@ describe('Task', () => {
         id={1}
         title={'Test Title'}
         isComplete={true}
-        onClickCallback={() => { }}
-        onDeleteCallback={() => { }}
+        onTaskClickCallback={() => { }}
+        onTaskDeleteCallback={() => { }}
       />
     );
 
@@ -70,8 +70,8 @@ describe('Task', () => {
         id={1}
         title={'Test Title'}
         isComplete={false}
-        onClickCallback={() => { }}
-        onDeleteCallback={() => { }}
+        onTaskClickCallback={() => { }}
+        onTaskDeleteCallback={() => { }}
       />
     );
 
